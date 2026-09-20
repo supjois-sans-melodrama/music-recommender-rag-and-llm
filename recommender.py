@@ -51,7 +51,7 @@ st.markdown("""
         display: none !important;
     }
 
-    /* GLOBAL TYPOGRAPHY (Target explicit text tags; preserve Streamlit layout wrappers) */
+    /* GLOBAL TYPOGRAPHY */
     html, body, p, h1, h2, h3, h4, h5, h6, label, input, textarea, button, span, li, a {
         font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
         color: #0F172A;
@@ -337,7 +337,7 @@ st.markdown("""
         line-height: 1.5 !important;
     }
 
-    /* EXPANDER CLEANUP FIX (Preserves arrow icon and cleans label alignment) */
+    /* EXPANDER CLEANUP FIX */
     div[data-testid="stExpander"] {
         border: 1px solid #CBD5E1 !important;
         border-radius: 8px !important;
@@ -625,11 +625,12 @@ with tab_generator:
                 f"```\n"
             )
 
+            # Updated models queue with short-circuit return logic
             models_to_try = [
-                "gemini-2.5-flash",
-                "gemini-2.5-pro",
-                "gemini-2.0-flash",
-                "gemini-1.5-flash"
+                "gemini-3.6-flash",
+                "gemini-3.8-flash",
+                "gemini-3.1-pro-preview",
+                "gemini-3.5-flash-lite"
             ]
             
             final_response = None
@@ -648,14 +649,14 @@ with tab_generator:
                     if response and response.text:
                         final_response = response.text
                         used_model = model_name
-                        break
+                        break  # Short-circuit immediately on first success
                 except APIError:
                     time.sleep(0.5)
                     continue
                 except Exception:
                     continue
 
-            # OUTPUT GENERATION SAFELY WRAPPED IN DARK HIGH-CONTRAST CARD
+            # OUTPUT GENERATION SAFELY WRAPPED IN HIGH-CONTRAST CARD
             if final_response:
                 st.markdown('<div class="studio-card">', unsafe_allow_html=True)
                 st.markdown(f"### ✨ Generated Track Concept *(via {used_model})*")
@@ -768,7 +769,7 @@ with tab_architecture:
 
         **Generative AI & Resilient Fallback Engine**
         * **Google GenAI SDK (`google.genai`):** Communicates with Gemini model endpoints.
-        * **4-Tier Model Fallback Sequence:** Programmatically failovers through valid production models (`gemini-2.5-flash` $\\rightarrow$ `gemini-2.5-pro` $\\rightarrow$ `gemini-2.0-flash` $\\rightarrow$ `gemini-1.5-flash`) on API errors.
+        * **4-Tier Model Fallback Sequence:** Programmatically failovers through valid production models (`gemini-3.6-flash` $\\rightarrow$ `gemini-3.8-flash` $\\rightarrow$ `gemini-3.1-pro-preview` $\\rightarrow$ `gemini-3.5-flash-lite`) on API errors with immediate short-circuit return.
         * **Zero-Downtime Local RAG Fallback:** Direct local RAG rendering if all cloud LLM endpoints are unavailable.
         """)
     st.markdown('</div>', unsafe_allow_html=True)
@@ -792,8 +793,9 @@ with tab_architecture:
     st.markdown("""
     #### Step 3: Multi-Tier Generation & Zero-Downtime Fallback Pipeline
     1. **Few-Shot Context Assembly:** The top 3 dataset matches are injected into the LLM system prompt as reference style anchors.
-    2. **Sequential Model Retry Chain:**
-       $$\\text{gemini-2.5-flash} \\rightarrow \\text{gemini-2.5-pro} \\rightarrow \\text{gemini-2.0-flash} \\rightarrow \\text{gemini-1.5-flash}$$
+    2. **Sequential Model Retry Chain (Short-Circuit):**
+       $$\\text{gemini-3.6-flash} \\rightarrow \\text{gemini-3.8-flash} \\rightarrow \\text{gemini-3.1-pro-preview} \\rightarrow \\text{gemini-3.5-flash-lite}$$
+       Execution returns immediately upon the first successful model response, preventing unnecessary downstream API calls.
     3. **Local RAG Direct Output (Fail-Safe):** If all cloud LLM endpoints fail or experience server outages, the pipeline bypasses LLM generation and directly formats the **top-ranked RAG library match** into a structured production prompt.
     """)
     st.markdown('</div>', unsafe_allow_html=True)
