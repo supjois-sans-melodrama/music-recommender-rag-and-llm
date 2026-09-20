@@ -5,23 +5,28 @@ import pandas as pd
 import streamlit as st
 import torch
 from sentence_transformers import SentenceTransformer, util
-import os
-##from dotenv import load_dotenv
+
+# Safely attempt to load local .env without failing on Streamlit Cloud
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
 
 
 # ==========================================
 # 0. API KEY CONFIGURATION
 # ==========================================
-# Load variables from your local .env file
-##load_dotenv()
-
-# Safely fetch the API key
-# Safe API key retrieval without dotenv
-API_KEY = st.secrets.get("GEMINI_API_KEY", os.environ.get("GEMINI_API_KEY", ""))
+# Fetch API key from environment or Streamlit Secrets
+API_KEY = os.getenv("GEMINI_API_KEY")
 
 if not API_KEY:
-    st.error("⚠️ GEMINI_API_KEY not found in Streamlit secrets or environment variables.")
-    
+    try:
+        if "GEMINI_API_KEY" in st.secrets:
+            API_KEY = st.secrets["GEMINI_API_KEY"]
+    except Exception:
+        pass
+
 # ==========================================
 # 1. PAGE CONFIG & HIGH-CONTRAST STYLES
 # ==========================================
@@ -131,7 +136,7 @@ st.markdown("""
         color: #0F172A;
     }
 
-    /* GLASS CARDS */
+    /* GLASS CARDS & HIGH-CONTRAST TEXT OVERRIDES */
     .studio-card {
         background: rgba(255, 255, 255, 0.95) !important;
         backdrop-filter: blur(16px) !important;
@@ -140,6 +145,24 @@ st.markdown("""
         padding: 1.25rem 1.5rem !important;
         box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05) !important;
         margin-bottom: 1rem !important;
+        color: #0F172A !important;
+    }
+
+    /* Force high contrast dark text for all markdown elements inside studio cards */
+    .studio-card h1, .studio-card h2, .studio-card h3, 
+    .studio-card h4, .studio-card h5, .studio-card h6 {
+        color: #0F172A !important;
+        font-weight: 800 !important;
+    }
+
+    .studio-card p, .studio-card li, .studio-card span, .studio-card div {
+        color: #334155 !important;
+        font-weight: 600 !important;
+    }
+
+    .studio-card strong, .studio-card b {
+        color: #0F172A !important;
+        font-weight: 800 !important;
     }
 
     .card-header {
@@ -361,7 +384,7 @@ def load_encoder():
 with st.spinner("Initializing neural studio engine..."):
     bi_encoder = load_encoder()
 
-@st.cache_data
+@st.cache_resource
 def get_embeddings(_dataframe):
     passages = [
         f"Title: {r['Song']} | Genre: {r['Genre']} | Creature: {r['Main Creature']} | Summary: {r['Summary']}"
@@ -376,7 +399,7 @@ passages, candidate_embeddings = get_embeddings(df)
 # 4. TABBED APPLICATION INTERFACE
 # ==========================================
 tab_generator, tab_library, tab_architecture = st.tabs([
-    "🎛️ Studio Generator", 
+    "🎛️ Prompt Generator", 
     "📚 Library Explorer", 
     "📖 Architecture & Tech Stack"
 ])
@@ -491,8 +514,8 @@ with tab_generator:
 
     # GENERATION RESPONSE DISPLAY
     if compose_clicked:
-        if not API_KEY or API_KEY == "YOUR_GEMINI_API_KEY_HERE":
-            st.error("API Key missing! Set your Gemini API Key in line 10 or in Streamlit Secrets.")
+        if not API_KEY:
+            st.error("API Key missing! Set your GEMINI_API_KEY in your local .env or Streamlit Secrets.")
             st.stop()
 
         with st.spinner("AI Producer is composing your track prompt..."):
@@ -543,12 +566,12 @@ with tab_generator:
                 f"```\n"
             )
 
-            # EXACT SPECIFIED MODEL FALLBACK SEQUENCE
+            # VALID PRODUCTION GEMINI MODEL FALLBACK SEQUENCE
             models_to_try = [
-                "gemini-3.6-flash",
-                "gemini-3.8-flash",
-                "gemini-3.1-pro-preview",
-                "gemini-3.5-flash-lite"
+                "gemini-2.5-flash",
+                "gemini-2.5-pro",
+                "gemini-2.0-flash",
+                "gemini-1.5-flash"
             ]
             
             final_response = None
@@ -568,13 +591,9 @@ with tab_generator:
                         final_response = response.text
                         used_model = model_name
                         break
-                except APIError as e:
-                    # Ignore model errors (404/503/429/UNAVAILABLE) quietly and proceed to the next fallback
-                    if any(err in str(e) for err in ["404", "NOT_FOUND", "503", "429", "UNAVAILABLE"]):
-                        time.sleep(0.5)
-                        continue
-                    else:
-                        st.warning(f"Model {model_name} issue: {e}. Trying fallback model...")
+                except APIError:
+                    time.sleep(0.5)
+                    continue
                 except Exception:
                     continue
 
@@ -635,7 +654,7 @@ with tab_architecture:
     <div class="studio-card">
         <h2 style="margin-top:0; color:#0F172A; font-weight:800;">🏗️ System Architecture & Tech Stack</h2>
         <p style="color:#475569; font-size:0.95rem; font-weight:500;">
-            <b>Flow Music Playground Pro</b> is an experimental Retrieval-Augmented Generation (RAG) web application that transforms structured song concepts into production-ready AI music generation prompts. It features a real-time data layer, vector similarity search, and a <b>zero-downtime multi-tier model fallback system</b>.
+            <b>Flow Music Playground Pro</b> is an enterprise-grade Retrieval-Augmented Generation (RAG) web application that transforms structured song concepts into production-ready AI music generation prompts. It features a real-time data layer, vector similarity search, and a <b>zero-downtime multi-tier model fallback system</b>.
         </p>
     </div>
     """, unsafe_allow_html=True)
@@ -688,7 +707,7 @@ with tab_architecture:
 
         **Generative AI & Resilient Fallback Engine**
         * **Google GenAI SDK (`google.genai`):** Communicates with Gemini model endpoints.
-        * **4-Tier Model Fallback Sequence:** Programmatically failovers through model tiers (`gemini-3.6-flash` $\\rightarrow$ `gemini-3.8-flash` $\\rightarrow$ `gemini-3.1-pro-preview` $\\rightarrow$ `gemini-3.5-flash-lite`) on API errors.
+        * **4-Tier Model Fallback Sequence:** Programmatically failovers through valid production models (`gemini-2.5-flash` $\\rightarrow$ `gemini-2.5-pro` $\\rightarrow$ `gemini-2.0-flash` $\\rightarrow$ `gemini-1.5-flash`) on API errors.
         * **Zero-Downtime Local RAG Fallback:** Direct local RAG rendering if all cloud LLM endpoints are unavailable.
         """)
     st.markdown('</div>', unsafe_allow_html=True)
@@ -713,7 +732,7 @@ with tab_architecture:
     #### Step 3: Multi-Tier Generation & Zero-Downtime Fallback Pipeline
     1. **Few-Shot Context Assembly:** The top 3 dataset matches are injected into the LLM system prompt as reference style anchors.
     2. **Sequential Model Retry Chain:**
-       $$\\text{gemini-3.6-flash} \\rightarrow \\text{gemini-3.8-flash} \\rightarrow \\text{gemini-3.1-pro-preview} \\rightarrow \\text{gemini-3.5-flash-lite}$$
+       $$\\text{gemini-2.5-flash} \\rightarrow \\text{gemini-2.5-pro} \\rightarrow \\text{gemini-2.0-flash} \\rightarrow \\text{gemini-1.5-flash}$$
     3. **Local RAG Direct Output (Fail-Safe):** If all cloud LLM endpoints fail or experience server outages, the pipeline bypasses LLM generation and directly formats the **top-ranked RAG library match** into a structured production prompt.
     """)
     st.markdown('</div>', unsafe_allow_html=True)
