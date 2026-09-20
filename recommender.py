@@ -6,27 +6,27 @@ import streamlit as st
 import torch
 from sentence_transformers import SentenceTransformer, util
 import os
-from dotenv import load_dotenv
+##from dotenv import load_dotenv
 
 
 # ==========================================
 # 0. API KEY CONFIGURATION
 # ==========================================
 # Load variables from your local .env file
-load_dotenv()
+##load_dotenv()
 
 # Safely fetch the API key
-API_KEY = os.getenv("GEMINI_API_KEY")
+# Safe API key retrieval without dotenv
+API_KEY = st.secrets.get("GEMINI_API_KEY", os.environ.get("GEMINI_API_KEY", ""))
 
-# Fallback to Streamlit secrets if running on Streamlit Cloud
-if not API_KEY and hasattr(st, "secrets") and "GEMINI_API_KEY" in st.secrets:
-    API_KEY = st.secrets["GEMINI_API_KEY"]
+if not API_KEY:
+    st.error("⚠️ GEMINI_API_KEY not found in Streamlit secrets or environment variables.")
     
 # ==========================================
 # 1. PAGE CONFIG & HIGH-CONTRAST STYLES
 # ==========================================
 st.set_page_config(
-    page_title="Flow Music Studio Pro",
+    page_title="Flow Music Playground Pro",
     page_icon="🎵",
     layout="wide",
     initial_sidebar_state="collapsed"
@@ -635,7 +635,7 @@ with tab_architecture:
     <div class="studio-card">
         <h2 style="margin-top:0; color:#0F172A; font-weight:800;">🏗️ System Architecture & Tech Stack</h2>
         <p style="color:#475569; font-size:0.95rem; font-weight:500;">
-            <b>Flow Music Playground Pro</b> is an enterprise-grade Retrieval-Augmented Generation (RAG) web application that transforms structured song concepts into production-ready AI music generation prompts. It features a real-time data layer, vector similarity search, and a <b>zero-downtime multi-tier model fallback system</b>.
+            <b>Flow Music Playground Pro</b> is an experimental Retrieval-Augmented Generation (RAG) web application that transforms structured song concepts into production-ready AI music generation prompts. It features a real-time data layer, vector similarity search, and a <b>zero-downtime multi-tier model fallback system</b>.
         </p>
     </div>
     """, unsafe_allow_html=True)
