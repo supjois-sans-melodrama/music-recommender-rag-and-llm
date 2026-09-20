@@ -1,0 +1,8 @@
+streamlit
+pandas
+gspread
+oauth2client
+sentence-transformers
+scikit-learn
+torch
+google-genai
