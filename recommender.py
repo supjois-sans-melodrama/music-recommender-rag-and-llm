@@ -17,7 +17,6 @@ except ImportError:
 # ==========================================
 # 0. API KEY CONFIGURATION
 # ==========================================
-# Fetch API key from environment or Streamlit Secrets
 API_KEY = os.getenv("GEMINI_API_KEY")
 
 if not API_KEY:
@@ -31,7 +30,7 @@ if not API_KEY:
 # 1. PAGE CONFIG & HIGH-CONTRAST STYLES
 # ==========================================
 st.set_page_config(
-    page_title="Flow Music Playground Pro",
+    page_title="Flow Music Studio Pro",
     page_icon="🎵",
     layout="wide",
     initial_sidebar_state="collapsed"
@@ -52,9 +51,10 @@ st.markdown("""
         display: none !important;
     }
 
-    /* SAFE TYPOGRAPHY */
-    html, body, p, h1, h2, h3, h4, h5, h6, label, input, textarea, button {
+    /* SAFE TYPOGRAPHY & GLOBAL HARD TEXT COLOR OVERRIDE */
+    html, body, p, h1, h2, h3, h4, h5, h6, label, input, textarea, button, span, div, li, a {
         font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+        color: #0F172A !important;
     }
 
     [data-testid="stIcon"], .material-symbols-outlined, [class*="icon"], [class*="Icon"] {
@@ -62,7 +62,7 @@ st.markdown("""
     }
 
     .stApp {
-        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e0f2fe 100%);
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e0f2fe 100%) !important;
     }
 
     /* HERO SECTION */
@@ -78,7 +78,7 @@ st.markdown("""
         align-items: center;
         gap: 6px;
         background: rgba(2, 177, 200, 0.08);
-        color: #02B1C8;
+        color: #02B1C8 !important;
         border: 1px solid rgba(2, 177, 200, 0.25);
         border-radius: 30px;
         padding: 4px 12px;
@@ -133,7 +133,7 @@ st.markdown("""
         padding: 5px 14px;
         font-size: 0.82rem;
         font-weight: 700;
-        color: #0F172A;
+        color: #0F172A !important;
     }
 
     /* GLASS CARDS & HIGH-CONTRAST TEXT OVERRIDES */
@@ -148,7 +148,10 @@ st.markdown("""
         color: #0F172A !important;
     }
 
-    /* Force high contrast dark text for all markdown elements inside studio cards */
+    .studio-card * {
+        color: #0F172A !important;
+    }
+
     .studio-card h1, .studio-card h2, .studio-card h3, 
     .studio-card h4, .studio-card h5, .studio-card h6 {
         color: #0F172A !important;
@@ -168,11 +171,61 @@ st.markdown("""
     .card-header {
         font-size: 1.15rem;
         font-weight: 800;
-        color: #0F172A;
+        color: #0F172A !important;
         margin-bottom: 1rem;
         display: flex;
         align-items: center;
         gap: 8px;
+    }
+
+    /* FIX HIGH CONTRAST TAB HEADINGS */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 8px;
+        background: rgba(241, 245, 249, 0.8);
+        padding: 6px;
+        border-radius: 12px;
+        border: 1px solid #CBD5E1;
+    }
+
+    .stTabs [data-baseweb="tab"] {
+        height: 42px;
+        border-radius: 8px;
+        padding: 0px 18px;
+        font-weight: 800 !important;
+        color: #334155 !important;
+        background-color: transparent !important;
+    }
+
+    .stTabs [data-baseweb="tab"] * {
+        color: #334155 !important;
+        font-weight: 800 !important;
+        font-size: 0.95rem !important;
+    }
+
+    .stTabs [aria-selected="true"] {
+        background-color: #FFFFFF !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08) !important;
+        border: 1px solid #94A3B8 !important;
+    }
+
+    .stTabs [aria-selected="true"] * {
+        color: #02B1C8 !important;
+        font-weight: 800 !important;
+    }
+
+    /* FIX NATIVE STREAMLIT WARNING / ALERT BOXES CONTRAST */
+    div[data-testid="stNotification"],
+    div[data-testid="stAlert"] {
+        background-color: #FEF3C7 !important;
+        border: 1.5px solid #F59E0B !important;
+        border-radius: 10px !important;
+        color: #78350F !important;
+    }
+
+    div[data-testid="stNotification"] *,
+    div[data-testid="stAlert"] * {
+        color: #78350F !important;
+        font-weight: 700 !important;
     }
 
     /* BOLD HIGH-CONTRAST LABELS */
@@ -201,7 +254,6 @@ st.markdown("""
         box-shadow: 0 2px 4px rgba(0,0,0,0.06) !important;
     }
 
-    /* SELECTBOX TEXT & ICON */
     div[data-baseweb="select"] * {
         color: #0F172A !important;
         font-weight: 700 !important;
@@ -213,7 +265,6 @@ st.markdown("""
         color: #0F172A !important;
     }
 
-    /* DROPDOWN HOVER & FOCUS */
     div[data-baseweb="select"]:hover > div,
     div[data-testid="stSelectbox"]:hover > div {
         border-color: #02B1C8 !important;
@@ -234,12 +285,10 @@ st.markdown("""
         box-shadow: 0 0 0 3px rgba(2, 177, 200, 0.25) !important;
     }
 
-    /* FIX "PRESS ENTER TO APPLY" OVERLAP */
     div[data-testid="stInputInstructions"] {
         display: none !important;
     }
 
-    /* PLACEHOLDER TEXT STYLING */
     .stTextInput input::placeholder, .stTextArea textarea::placeholder {
         color: #64748B !important;
         font-weight: 500 !important;
@@ -257,6 +306,10 @@ st.markdown("""
         padding: 0.65rem 1rem !important;
         box-shadow: 0 4px 12px rgba(25, 160, 168, 0.3) !important;
         width: 100%;
+    }
+
+    .stButton > button[kind="primary"] * {
+        color: white !important;
     }
 
     .stButton > button[kind="secondary"] {
@@ -283,13 +336,13 @@ st.markdown("""
     .result-anchor-title {
         font-size: 1rem;
         font-weight: 800;
-        color: #0F172A;
+        color: #0F172A !important;
         margin-bottom: 0.3rem;
     }
 
     .result-anchor-sub {
         font-size: 0.86rem;
-        color: #334155;
+        color: #334155 !important;
         font-weight: 600;
         margin-bottom: 0.5rem;
     }
@@ -300,25 +353,6 @@ st.markdown("""
         border-radius: 12px !important;
         overflow: hidden !important;
         box-shadow: 0 4px 12px rgba(0,0,0,0.03) !important;
-    }
-
-    /* TABS */
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 6px;
-    }
-
-    .stTabs [data-baseweb="tab"] {
-        height: 42px;
-        border-radius: 8px;
-        padding: 0px 18px;
-        font-weight: 700 !important;
-        color: #475569 !important;
-    }
-
-    .stTabs [aria-selected="true"] {
-        background-color: #FFFFFF !important;
-        color: #02B1C8 !important;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.06) !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -399,7 +433,7 @@ passages, candidate_embeddings = get_embeddings(df)
 # 4. TABBED APPLICATION INTERFACE
 # ==========================================
 tab_generator, tab_library, tab_architecture = st.tabs([
-    "🎛️ Prompt Generator", 
+    "🎛️ Studio Generator", 
     "📚 Library Explorer", 
     "📖 Architecture & Tech Stack"
 ])
@@ -566,7 +600,6 @@ with tab_generator:
                 f"```\n"
             )
 
-            # VALID PRODUCTION GEMINI MODEL FALLBACK SEQUENCE
             models_to_try = [
                 "gemini-2.5-flash",
                 "gemini-2.5-pro",
@@ -597,22 +630,25 @@ with tab_generator:
                 except Exception:
                     continue
 
-            # OUTPUT GENERATION OR FAIL-SAFE RAG FALLBACK
-            st.markdown('<div class="studio-card">', unsafe_allow_html=True)
+            # OUTPUT GENERATION SAFELY WRAPPED IN DARK HIGH-CONTRAST CARD
             if final_response:
+                st.markdown('<div class="studio-card">', unsafe_allow_html=True)
                 st.markdown(f"### ✨ Generated Track Concept *(via {used_model})*")
                 st.markdown(final_response)
+                st.markdown('</div>', unsafe_allow_html=True)
             else:
                 st.warning("⚠️ Cloud LLM endpoints are currently undergoing peak load. Displaying direct RAG library match.")
-                st.markdown(f"### 🎯 RAG Library Fallback Match")
-                st.markdown(f"- **Closest Match Title**: {top_match_row['Song']}")
-                st.markdown(f"- **Genre & Style**: {top_match_row['Genre']}")
-                st.markdown(f"- **Language**: {language_option}")
-                st.markdown(f"- **Main Character / Creature**: {creature_input}")
-                st.markdown(f"- **Summary**: {top_match_row['Summary']}")
+                
+                st.markdown('<div class="studio-card">', unsafe_allow_html=True)
+                st.markdown("### 🎯 RAG Library Fallback Match")
+                st.markdown(f"* **Closest Match Title**: {top_match_row['Song']}")
+                st.markdown(f"* **Genre & Style**: {top_match_row['Genre']}")
+                st.markdown(f"* **Language**: {language_option}")
+                st.markdown(f"* **Main Character / Creature**: {creature_input}")
+                st.markdown(f"* **Summary**: {top_match_row['Summary']}")
                 st.markdown("**Production Prompt**:")
                 st.code(top_match_row['Prompt'], language="text")
-            st.markdown('</div>', unsafe_allow_html=True)
+                st.markdown('</div>', unsafe_allow_html=True)
 
 # -----------------------------------------------------------------------------
 # TAB 2: LIBRARY EXPLORER
@@ -652,8 +688,8 @@ with tab_library:
 with tab_architecture:
     st.markdown("""
     <div class="studio-card">
-        <h2 style="margin-top:0; color:#0F172A; font-weight:800;">🏗️ System Architecture & Tech Stack</h2>
-        <p style="color:#475569; font-size:0.95rem; font-weight:500;">
+        <h2 style="margin-top:0; color:#0F172A !important; font-weight:800;">🏗️ System Architecture & Tech Stack</h2>
+        <p style="color:#475569 !important; font-size:0.95rem; font-weight:500;">
             <b>Flow Music Playground Pro</b> is an enterprise-grade Retrieval-Augmented Generation (RAG) web application that transforms structured song concepts into production-ready AI music generation prompts. It features a real-time data layer, vector similarity search, and a <b>zero-downtime multi-tier model fallback system</b>.
         </p>
     </div>
