@@ -46,19 +46,16 @@ st.markdown("""
         padding-bottom: 1.5rem !important;
         max-width: 1050px !important;
     }
-    
+
     div[data-testid="stVerticalBlock"] > div:empty {
         display: none !important;
     }
 
-    /* SAFE TYPOGRAPHY & GLOBAL HARD TEXT COLOR OVERRIDE */
-    html, body, p, h1, h2, h3, h4, h5, h6, label, input, textarea, button, span, div, li, a {
+    /* GLOBAL TYPOGRAPHY (Target explicit text tags; preserve Streamlit layout wrappers) */
+    html, body, p, h1, h2, h3, h4, h5, h6, label, input, textarea, button, span, li, a {
         font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
-        color: #0F172A !important;
-    }
-
-    [data-testid="stIcon"], .material-symbols-outlined, [class*="icon"], [class*="Icon"] {
-        font-family: inherit !important;
+        color: #0F172A;
+        line-height: 1.5 !important;
     }
 
     .stApp {
@@ -68,7 +65,7 @@ st.markdown("""
     /* HERO SECTION */
     .hero-container {
         text-align: center;
-        padding: 0.2rem 1rem 0.8rem 1rem;
+        padding: 0.5rem 1rem 1.2rem 1rem;
         max-width: 850px;
         margin: 0 auto;
     }
@@ -97,12 +94,12 @@ st.markdown("""
     }
 
     .hero-title {
-        font-size: clamp(2.2rem, 4vw, 3rem) !important;
+        font-size: clamp(2rem, 4vw, 2.8rem) !important;
         font-weight: 800 !important;
-        letter-spacing: -0.03em !important;
+        letter-spacing: -0.02em !important;
         color: #0F172A !important;
-        margin-bottom: 0.3rem !important;
-        line-height: 1.1 !important;
+        margin-bottom: 0.5rem !important;
+        line-height: 1.3 !important;
     }
 
     .highlight-word {
@@ -112,10 +109,11 @@ st.markdown("""
     }
 
     .hero-subtitle {
-        font-size: clamp(0.9rem, 1.5vw, 1rem) !important;
+        font-size: clamp(0.95rem, 1.5vw, 1.1rem) !important;
         color: #475569 !important;
         margin: 0 auto 0.8rem auto !important;
         font-weight: 600 !important;
+        line-height: 1.4 !important;
     }
 
     .metrics-bar {
@@ -136,7 +134,7 @@ st.markdown("""
         color: #0F172A !important;
     }
 
-    /* GLASS CARDS & HIGH-CONTRAST TEXT OVERRIDES */
+    /* GLASS CARDS & HIGH-CONTRAST CONTAINER OVERRIDES */
     .studio-card {
         background: rgba(255, 255, 255, 0.95) !important;
         backdrop-filter: blur(16px) !important;
@@ -145,22 +143,22 @@ st.markdown("""
         padding: 1.25rem 1.5rem !important;
         box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05) !important;
         margin-bottom: 1rem !important;
-        color: #0F172A !important;
-    }
-
-    .studio-card * {
-        color: #0F172A !important;
     }
 
     .studio-card h1, .studio-card h2, .studio-card h3, 
     .studio-card h4, .studio-card h5, .studio-card h6 {
         color: #0F172A !important;
         font-weight: 800 !important;
+        margin-top: 0.6rem !important;
+        margin-bottom: 0.6rem !important;
+        line-height: 1.35 !important;
     }
 
-    .studio-card p, .studio-card li, .studio-card span, .studio-card div {
+    .studio-card p, .studio-card li, .studio-card span {
         color: #334155 !important;
         font-weight: 600 !important;
+        line-height: 1.55 !important;
+        margin-bottom: 0.5rem !important;
     }
 
     .studio-card strong, .studio-card b {
@@ -176,30 +174,36 @@ st.markdown("""
         display: flex;
         align-items: center;
         gap: 8px;
+        line-height: 1.3 !important;
     }
 
-    /* FIX HIGH CONTRAST TAB HEADINGS */
+    /* TAB HEADINGS NO-OVERLAP FIX */
     .stTabs [data-baseweb="tab-list"] {
         gap: 8px;
-        background: rgba(241, 245, 249, 0.8);
+        background: rgba(241, 245, 249, 0.9);
         padding: 6px;
         border-radius: 12px;
         border: 1px solid #CBD5E1;
     }
 
     .stTabs [data-baseweb="tab"] {
-        height: 42px;
+        height: auto !important;
+        min-height: 42px !important;
         border-radius: 8px;
-        padding: 0px 18px;
+        padding: 8px 18px !important;
         font-weight: 800 !important;
         color: #334155 !important;
         background-color: transparent !important;
+        white-space: nowrap !important;
+        display: inline-flex !important;
+        align-items: center !important;
     }
 
     .stTabs [data-baseweb="tab"] * {
         color: #334155 !important;
         font-weight: 800 !important;
         font-size: 0.95rem !important;
+        line-height: 1.2 !important;
     }
 
     .stTabs [aria-selected="true"] {
@@ -211,21 +215,6 @@ st.markdown("""
     .stTabs [aria-selected="true"] * {
         color: #02B1C8 !important;
         font-weight: 800 !important;
-    }
-
-    /* FIX NATIVE STREAMLIT WARNING / ALERT BOXES CONTRAST */
-    div[data-testid="stNotification"],
-    div[data-testid="stAlert"] {
-        background-color: #FEF3C7 !important;
-        border: 1.5px solid #F59E0B !important;
-        border-radius: 10px !important;
-        color: #78350F !important;
-    }
-
-    div[data-testid="stNotification"] *,
-    div[data-testid="stAlert"] * {
-        color: #78350F !important;
-        font-weight: 700 !important;
     }
 
     /* BOLD HIGH-CONTRAST LABELS */
@@ -240,7 +229,7 @@ st.markdown("""
         letter-spacing: -0.01em !important;
     }
 
-    /* STRICT HIGH-CONTRAST DROPDOWNS (SELECTBOX) */
+    /* DROPDOWNS (SELECTBOX) */
     div[data-testid="stSelectbox"] > div,
     div[data-baseweb="select"],
     div[data-baseweb="select"] > div,
@@ -323,28 +312,46 @@ st.markdown("""
         width: 100%;
     }
 
-    /* SEARCH ANCHOR CARDS */
+    /* RESULT ANCHOR CARDS */
     .result-anchor-card {
         background: #F8FAFC;
         border: 1.5px solid #CBD5E1;
         border-left: 5px solid #02B1C8;
         border-radius: 8px;
         padding: 1rem 1.2rem;
-        margin-bottom: 0.8rem;
+        margin-bottom: 0.5rem;
     }
 
     .result-anchor-title {
         font-size: 1rem;
         font-weight: 800;
         color: #0F172A !important;
-        margin-bottom: 0.3rem;
+        margin-bottom: 0.4rem;
+        line-height: 1.3 !important;
     }
 
     .result-anchor-sub {
-        font-size: 0.86rem;
+        font-size: 0.88rem;
         color: #334155 !important;
         font-weight: 600;
-        margin-bottom: 0.5rem;
+        line-height: 1.5 !important;
+    }
+
+    /* EXPANDER CLEANUP FIX (Preserves arrow icon and cleans label alignment) */
+    div[data-testid="stExpander"] {
+        border: 1px solid #CBD5E1 !important;
+        border-radius: 8px !important;
+        background-color: #FFFFFF !important;
+        margin-bottom: 1rem !important;
+    }
+
+    div[data-testid="stExpander"] summary {
+        padding: 0.6rem 1rem !important;
+    }
+
+    div[data-testid="stExpander"] summary * {
+        font-weight: 700 !important;
+        color: #0F172A !important;
     }
 
     /* DATAFRAME / TABLE */
@@ -353,6 +360,22 @@ st.markdown("""
         border-radius: 12px !important;
         overflow: hidden !important;
         box-shadow: 0 4px 12px rgba(0,0,0,0.03) !important;
+    }
+
+    /* NOTIFICATION / ALERT BOX FIX */
+    div[data-testid="stNotification"],
+    div[data-testid="stAlert"] {
+        background-color: #FEF3C7 !important;
+        border: 1.5px solid #F59E0B !important;
+        border-radius: 10px !important;
+        padding: 12px 16px !important;
+    }
+
+    div[data-testid="stNotification"] *,
+    div[data-testid="stAlert"] * {
+        color: #78350F !important;
+        font-weight: 700 !important;
+        line-height: 1.4 !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -539,11 +562,13 @@ with tab_generator:
                 st.markdown(f"""
                 <div class="result-anchor-card">
                     <div class="result-anchor-title">🎵 {row['Song']} <span style="color:#02B1C8; font-weight:800;">• {row['Genre']}</span></div>
-                    <div class="result-anchor-sub"><b>Character/Creature:</b> {row['Main Creature']} | <b>Summary:</b> {row['Summary']}</div>
+                    <div class="result-anchor-sub"><b>Character/Creature:</b> {row['Main Creature']} <br><b>Summary:</b> {row['Summary']}</div>
                 </div>
                 """, unsafe_allow_html=True)
+                
                 with st.expander("Show Detailed Production Prompt"):
                     st.code(row['Prompt'], language="text")
+
             st.markdown('</div>', unsafe_allow_html=True)
 
     # GENERATION RESPONSE DISPLAY
