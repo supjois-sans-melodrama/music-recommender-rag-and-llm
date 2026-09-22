@@ -30,7 +30,7 @@ if not API_KEY:
 # 1. PAGE CONFIG & HIGH-CONTRAST STYLES
 # ==========================================
 st.set_page_config(
-    page_title="Flow Music Studio Pro",
+    page_title="Flow Music Playground Pro",
     page_icon="🎵",
     layout="wide",
     initial_sidebar_state="collapsed"
