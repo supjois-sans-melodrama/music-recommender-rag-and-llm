@@ -30,7 +30,7 @@ if not API_KEY:
 # 1. PAGE CONFIG & HIGH-CONTRAST STYLES
 # ==========================================
 st.set_page_config(
-    page_title="Flow Music Playground Pro",
+    page_title="Flow Music Test Playground ",
     page_icon="🎵",
     layout="wide",
     initial_sidebar_state="collapsed"
@@ -590,7 +590,7 @@ with tab_generator:
             top_results = torch.topk(cosine_scores, k=3)
 
             st.markdown('<div class="studio-card">', unsafe_allow_html=True)
-            st.markdown("### 🎯 Top Relevant Style Anchors")
+            st.markdown('<div class="card-header">🎯 Top Relevant Style Anchors</div>', unsafe_allow_html=True)
             
             for idx in top_results.indices:
                 row = df.iloc[int(idx)]
@@ -696,14 +696,14 @@ with tab_generator:
 
             if final_response:
                 st.markdown('<div class="studio-card">', unsafe_allow_html=True)
-                st.markdown(f"### ✨ Generated Track Concept *(via {used_model})*")
+                st.markdown(f'<div class="card-header">✨ Generated Track Concept <i>(via {used_model})</i></div>', unsafe_allow_html=True)
                 st.markdown(final_response)
                 st.markdown('</div>', unsafe_allow_html=True)
             else:
                 st.warning("⚠️ Cloud LLM endpoints are currently undergoing peak load. Displaying direct RAG library match.")
                 
                 st.markdown('<div class="studio-card">', unsafe_allow_html=True)
-                st.markdown("### 🎯 RAG Library Fallback Match")
+                st.markdown('<div class="card-header">🎯 RAG Library Fallback Match</div>', unsafe_allow_html=True)
                 st.markdown(f"* **Closest Match Title**: {top_match_row['Song']}")
                 st.markdown(f"* **Genre & Style**: {top_match_row['Genre']}")
                 st.markdown(f"* **Language**: {language_option}")
@@ -755,15 +755,15 @@ with tab_library:
 with tab_architecture:
     st.markdown("""
     <div class="studio-card">
-        <h2 style="margin-top:0; color:#0F172A !important; font-weight:800;">🏗️ System Architecture & Tech Stack</h2>
+        <div class="card-header">🏗️ System Architecture & Tech Stack</div>
         <p style="color:#475569 !important; font-size:0.95rem; font-weight:500;">
-            <b>Flow Music Playground Pro</b> is an experimental Retrieval-Augmented Generation (RAG) web application that transforms structured song concepts into production-ready AI music generation prompts. It features a real-time data layer, vector similarity search, and a <b>near zero-downtime multi-tier model fallback system</b>.
+            <b>Flow Music Playground</b> is an experimental Retrieval-Augmented Generation (RAG) web application that transforms structured song concepts into production-ready AI music generation prompts. It features a real-time data layer, vector similarity search, and a <b>near zero-downtime multi-tier model fallback system</b>.
         </p>
     </div>
     """, unsafe_allow_html=True)
 
     st.markdown('<div class="studio-card">', unsafe_allow_html=True)
-    st.markdown("### 📐 System Architecture Diagram")
+    st.markdown('<div class="card-header">📐 System Architecture Diagram</div>', unsafe_allow_html=True)
     
     def render_svg(svg_file_path):
         with open(svg_file_path, "r") as f:
@@ -787,7 +787,7 @@ with tab_architecture:
     st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown('<div class="studio-card">', unsafe_allow_html=True)
-    st.markdown("### 1. Tech Stack Breakdown")
+    st.markdown('<div class="card-header">⚙️ Tech Stack Breakdown</div>', unsafe_allow_html=True)
     col_tech1, col_tech2 = st.columns(2)
     
     with col_tech1:
@@ -816,7 +816,7 @@ with tab_architecture:
     st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown('<div class="studio-card">', unsafe_allow_html=True)
-    st.markdown("### 2. How Retrieval-Augmented Generation (RAG) & Fallbacks Work")
+    st.markdown('<div class="card-header">🔄 How Retrieval-Augmented Generation (RAG) & Fallbacks Work</div>', unsafe_allow_html=True)
     
     st.markdown("""
     #### Step 1: Semantic Vector Indexing
