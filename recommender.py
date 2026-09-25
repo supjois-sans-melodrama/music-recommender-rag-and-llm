@@ -30,7 +30,7 @@ if not API_KEY:
 # 1. PAGE CONFIG & HIGH-CONTRAST STYLES
 # ==========================================
 st.set_page_config(
-    page_title="Flow Music Playground Pro",
+    page_title="Flow Music Studio Pro",
     page_icon="🎵",
     layout="wide",
     initial_sidebar_state="collapsed"
@@ -337,29 +337,41 @@ st.markdown("""
         line-height: 1.5 !important;
     }
 
-    /* EXPANDER CLEANUP FIX */
-    div[data-testid="stExpander"] {
-        border: 1px solid #CBD5E1 !important;
-        border-radius: 8px !important;
-        background-color: #FFFFFF !important;
-        margin-bottom: 1rem !important;
+    /* PROMPT CONTAINER BAR */
+    .prompt-bar-container {
+        background: #FFFFFF;
+        border: 1.5px solid #CBD5E1;
+        border-radius: 10px;
+        padding: 12px 16px;
+        margin-bottom: 0.4rem;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.02);
     }
 
-    div[data-testid="stExpander"] summary {
-        padding: 0.6rem 1rem !important;
+    .prompt-bar-title {
+        color: #02B1C8 !important;
+        font-weight: 800 !important;
+        font-size: 0.95rem !important;
+        letter-spacing: -0.01em;
     }
 
-    div[data-testid="stExpander"] summary * {
-        font-weight: 700 !important;
-        color: #0F172A !important;
-    }
-
-    /* DATAFRAME / TABLE */
+    /* DATAFRAME & TABLE STYLING */
     div[data-testid="stDataFrame"] {
         border: 2px solid #CBD5E1 !important;
         border-radius: 12px !important;
         overflow: hidden !important;
         box-shadow: 0 4px 12px rgba(0,0,0,0.03) !important;
+    }
+
+    div[data-testid="stDataFrame"] th {
+        background-color: #0F172A !important;
+        color: #FFFFFF !important;
+        font-weight: 800 !important;
+        font-size: 0.95rem !important;
+    }
+
+    div[data-testid="stDataFrame"] td {
+        font-weight: 700 !important;
+        color: #0F172A !important;
     }
 
     /* NOTIFICATION / ALERT BOX FIX */
@@ -566,8 +578,13 @@ with tab_generator:
                 </div>
                 """, unsafe_allow_html=True)
                 
-                with st.expander("Show Detailed Production Prompt"):
-                    st.code(row['Prompt'], language="text")
+                # Foolproof high-contrast custom prompt bar & code block
+                st.markdown("""
+                <div class="prompt-bar-container">
+                    <div class="prompt-bar-title">💡 Try this prompt</div>
+                </div>
+                """, unsafe_allow_html=True)
+                st.code(row['Prompt'], language="text")
 
             st.markdown('</div>', unsafe_allow_html=True)
 
@@ -625,7 +642,6 @@ with tab_generator:
                 f"```\n"
             )
 
-            # Updated models queue with short-circuit return logic
             models_to_try = [
                 "gemini-3.6-flash",
                 "gemini-3.8-flash",
@@ -649,14 +665,13 @@ with tab_generator:
                     if response and response.text:
                         final_response = response.text
                         used_model = model_name
-                        break  # Short-circuit immediately on first success
+                        break
                 except APIError:
                     time.sleep(0.5)
                     continue
                 except Exception:
                     continue
 
-            # OUTPUT GENERATION SAFELY WRAPPED IN HIGH-CONTRAST CARD
             if final_response:
                 st.markdown('<div class="studio-card">', unsafe_allow_html=True)
                 st.markdown(f"### ✨ Generated Track Concept *(via {used_model})*")
@@ -672,7 +687,11 @@ with tab_generator:
                 st.markdown(f"* **Language**: {language_option}")
                 st.markdown(f"* **Main Character / Creature**: {creature_input}")
                 st.markdown(f"* **Summary**: {top_match_row['Summary']}")
-                st.markdown("**Production Prompt**:")
+                st.markdown("""
+                <div class="prompt-bar-container">
+                    <div class="prompt-bar-title">💡 Try this prompt</div>
+                </div>
+                """, unsafe_allow_html=True)
                 st.code(top_match_row['Prompt'], language="text")
                 st.markdown('</div>', unsafe_allow_html=True)
 
@@ -699,7 +718,7 @@ with tab_library:
         use_container_width=True, 
         height=400,
         column_config={
-            "Song": st.column_config.TextColumn("🎵 Track Title", width="medium"),
+            "Song": st.column_config.TextColumn("🎵 Track Title", width="medium", help="Official title of the song"),
             "Genre": st.column_config.TextColumn("🎸 Genre & Style", width="medium"),
             "Main Creature": st.column_config.TextColumn("🐉 Character/Creature", width="medium"),
             "Summary": st.column_config.TextColumn("📝 Summary Narrative", width="large"),
@@ -716,7 +735,7 @@ with tab_architecture:
     <div class="studio-card">
         <h2 style="margin-top:0; color:#0F172A !important; font-weight:800;">🏗️ System Architecture & Tech Stack</h2>
         <p style="color:#475569 !important; font-size:0.95rem; font-weight:500;">
-            <b>Flow Music Playground Pro</b> is an enterprise-grade Retrieval-Augmented Generation (RAG) web application that transforms structured song concepts into production-ready AI music generation prompts. It features a real-time data layer, vector similarity search, and a <b>zero-downtime multi-tier model fallback system</b>.
+            <b>Flow Music Playground Pro</b> is an experimental Retrieval-Augmented Generation (RAG) web application that transforms structured song concepts into production-ready AI music generation prompts. It features a real-time data layer, vector similarity search, and a <b>near zero-downtime multi-tier model fallback system</b>.
         </p>
     </div>
     """, unsafe_allow_html=True)
