@@ -52,7 +52,7 @@ st.markdown("""
     }
 
     /* GLOBAL TYPOGRAPHY */
-    html, body, p, h1, h2, h3, h4, h5, h6, label, input, textarea, button, span, li, a {
+    html, body, p, h1, h2, h3, h4, h5, h6, label, input, textarea, button, li {
         font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
         color: #0F172A;
         line-height: 1.5 !important;
@@ -354,6 +354,29 @@ st.markdown("""
         letter-spacing: -0.01em;
     }
 
+    /* BULLETPROOF CODE BLOCK & SELECTION CONTRAST FIX */
+    div[data-testid="stCode"] {
+        background-color: #0F172A !important;
+        background: #0F172A !important;
+        border: 1.5px solid #334155 !important;
+        border-radius: 10px !important;
+    }
+
+    div[data-testid="stCode"] pre,
+    div[data-testid="stCode"] code,
+    div[data-testid="stCode"] span {
+        background-color: transparent !important;
+        color: #F8FAFC !important;
+    }
+
+    div[data-testid="stCode"] ::selection,
+    div[data-testid="stCode"] code::selection,
+    div[data-testid="stCode"] pre::selection,
+    div[data-testid="stCode"] span::selection {
+        background: #02B1C8 !important;
+        color: #FFFFFF !important;
+    }
+
     /* DATAFRAME & TABLE STYLING */
     div[data-testid="stDataFrame"] {
         border: 2px solid #CBD5E1 !important;
@@ -578,7 +601,6 @@ with tab_generator:
                 </div>
                 """, unsafe_allow_html=True)
                 
-                # Foolproof high-contrast custom prompt bar & code block
                 st.markdown("""
                 <div class="prompt-bar-container">
                     <div class="prompt-bar-title">💡 Try this prompt</div>
