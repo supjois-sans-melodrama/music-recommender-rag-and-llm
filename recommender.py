@@ -30,7 +30,7 @@ if not API_KEY:
 # 1. PAGE CONFIG & HIGH-CONTRAST STYLES
 # ==========================================
 st.set_page_config(
-    page_title="Flow Music Studio Pro",
+    page_title="Flow Music Playground Pro",
     page_icon="🎵",
     layout="wide",
     initial_sidebar_state="collapsed"
@@ -419,7 +419,7 @@ st.markdown("""
 st.markdown("""
 <div class="hero-container">
     <div class="status-badge">
-        <span class="status-dot"></span> PRODUCER ENGINE V3.6 ACTIVE
+        <span class="status-dot"></span> PRODUCER ENGINE ACTIVE
     </div>
     <h1 class="hero-title">Create the <span class="highlight-word">song</span> you imagine.</h1>
     <p class="hero-subtitle">Get music prompts and song ideas to generate your best songs.</p>
