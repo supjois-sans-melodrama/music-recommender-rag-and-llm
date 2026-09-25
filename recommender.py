@@ -30,7 +30,7 @@ if not API_KEY:
 # 1. PAGE CONFIG & HIGH-CONTRAST STYLES
 # ==========================================
 st.set_page_config(
-    page_title="Flow Music Test Playground ",
+    page_title="Flow Music Test Playground",
     page_icon="🎵",
     layout="wide",
     initial_sidebar_state="collapsed"
@@ -145,11 +145,21 @@ st.markdown("""
         margin-bottom: 1rem !important;
     }
 
+    /* BULLETPROOF HIGH-CONTRAST HEADING FIX FOR ALL MARKDOWN & HTML HEADERS */
     .studio-card h1, .studio-card h2, .studio-card h3, 
-    .studio-card h4, .studio-card h5, .studio-card h6 {
+    .studio-card h4, .studio-card h5, .studio-card h6,
+    div[data-testid="stMarkdownContainer"] h1,
+    div[data-testid="stMarkdownContainer"] h2,
+    div[data-testid="stMarkdownContainer"] h3,
+    div[data-testid="stMarkdownContainer"] h4,
+    div[data-testid="stMarkdownContainer"] h5,
+    div[data-testid="stMarkdownContainer"] h6 {
         color: #0F172A !important;
+        fill: #0F172A !important;
         font-weight: 800 !important;
-        margin-top: 0.6rem !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        margin-top: 0.8rem !important;
         margin-bottom: 0.6rem !important;
         line-height: 1.35 !important;
     }
@@ -166,8 +176,15 @@ st.markdown("""
         font-weight: 800 !important;
     }
 
+    /* LATEX & MATH CONTRAST FIX */
+    .katex, .katex-html, .stLatex, span.katex-display {
+        color: #0F172A !important;
+        fill: #0F172A !important;
+        opacity: 1 !important;
+    }
+
     .card-header {
-        font-size: 1.15rem;
+        font-size: 1.2rem;
         font-weight: 800;
         color: #0F172A !important;
         margin-bottom: 1rem;
@@ -757,7 +774,7 @@ with tab_architecture:
     <div class="studio-card">
         <div class="card-header">🏗️ System Architecture & Tech Stack</div>
         <p style="color:#475569 !important; font-size:0.95rem; font-weight:500;">
-            <b>Flow Music Playground</b> is an experimental Retrieval-Augmented Generation (RAG) web application that transforms structured song concepts into production-ready AI music generation prompts. It features a real-time data layer, vector similarity search, and a <b>near zero-downtime multi-tier model fallback system</b>.
+            <b>Flow Music Playground Pro</b> is an experimental Retrieval-Augmented Generation (RAG) web application that transforms structured song concepts into production-ready AI music generation prompts. It features a real-time data layer, vector similarity search, and a <b>near zero-downtime multi-tier model fallback system</b>.
         </p>
     </div>
     """, unsafe_allow_html=True)
